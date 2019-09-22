@@ -1,0 +1,25 @@
+<resources>
+    <!--Buttons -->
+    <string name="app_name">My Application</string>
+    <string name="signIn">Sign In</string>
+    <string name="signUp">Sign Up</string>
+    <string name="registerBtn">Register</string>
+    <string name="cancelBtn">Cancel</string>
+    <string name="editBtn">Edit</string>
+    <string name="saveBtn">Save</string>
+
+    <!--Edittexts -->
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="email">Email</string>
+    <string name="password"> Password</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="address"> Address</string>
+
+
+    <!-- Textviews-->
+    <string name="welcome">Welcome!</string>
+    <string name="notRegistered">Not a member yet?</string>
+
+
+</resources>
