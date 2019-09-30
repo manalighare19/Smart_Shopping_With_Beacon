@@ -6,134 +6,154 @@
     android:layout_height="match_parent"
     tools:context=".UserProfile">
 
-    <Button
-        android:id="@+id/editBtn"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
-        android:text="@string/editBtn"
-        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addressTextView" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45">
 
-    <TextView
-        android:id="@+id/firstNameTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:ems="10"
-        android:fontFamily="@font/marko_one"
-        android:text="@string/firstName"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/editBtn"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/custom_button"
+            android:text="@string/editBtn"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_light_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addressTextView" />
 
-    <TextView
-        android:id="@+id/lastNameTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:ems="10"
-        android:fontFamily="@font/marko_one"
-        android:text="@string/lastName"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstNameTextView" />
+        <Button
+            android:id="@+id/shopBtn"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/custom_button"
+            android:text="@string/shop"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_light_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/editBtn"
+            app:layout_constraintStart_toStartOf="@+id/editBtn"
+            app:layout_constraintTop_toBottomOf="@+id/editBtn" />
 
-    <TextView
-        android:id="@+id/emailTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:fontFamily="sans-serif"
-        android:text="@string/email"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lastNameTextView" />
+        <TextView
+            android:id="@+id/firstNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:ems="10"
+            android:text="@string/firstName"
+            android:textSize="18dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fnameLabel"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/addressTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:fontFamily="@font/marko_one"
-        android:text="@string/address"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
+        <TextView
+            android:id="@+id/lastNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:ems="10"
+            android:text="@string/lastName"
+            android:textSize="18dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/firstNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/firstNameTextView" />
 
-    <TextView
-        android:id="@+id/fnameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="35dp"
-        android:fontFamily="@font/marko_one"
-        android:text="@string/firstName"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/emailTextView"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/email"
+            android:textSize="18dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/lastNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/lastNameTextView" />
 
-    <TextView
-        android:id="@+id/lnamelabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/marko_one"
-        android:text="@string/lastName"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fnameLabel" />
+        <TextView
+            android:id="@+id/addressTextView"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:lines="2"
+            android:text="@string/address"
+            android:textSize="18dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/emailTextView"
+            app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
 
-    <TextView
-        android:id="@+id/emailLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/marko_one"
-        android:text="@string/email"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lnamelabel" />
+        <TextView
+            android:id="@+id/fnameLabel"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/firstName"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/addressLabel"
-        android:layout_width="81dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/marko_one"
-        android:text="@string/address"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailLabel" />
+        <TextView
+            android:id="@+id/lnamelabel"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/lastName"
+            android:textSize="18sp"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="@+id/fnameLabel"
+            app:layout_constraintTop_toBottomOf="@+id/fnameLabel" />
 
+        <TextView
+            android:id="@+id/emailLabel"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/email"
+            android:textSize="18sp"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="@+id/lnamelabel"
+            app:layout_constraintTop_toBottomOf="@+id/lnamelabel" />
+
+        <TextView
+            android:id="@+id/addressLabel"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/address"
+            android:textSize="18sp"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="@+id/emailLabel"
+            app:layout_constraintTop_toBottomOf="@+id/emailLabel" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,12 @@
 package com.example.inclass03_amad;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+    String userID;
+    String firstname;
+    String lastname;
+    String email;
+    String address;
 }
+

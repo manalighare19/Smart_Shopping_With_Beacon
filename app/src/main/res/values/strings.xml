@@ -1,12 +1,15 @@
 <resources>
     <!--Buttons -->
     <string name="app_name">My Application</string>
-    <string name="signIn">Sign In</string>
+    <string name="signIn">Login</string>
     <string name="signUp">Sign Up</string>
     <string name="registerBtn">Register</string>
     <string name="cancelBtn">Cancel</string>
     <string name="editBtn">Edit</string>
     <string name="saveBtn">Save</string>
+    <string name="logout">Logout</string>
+    <string name="shop">Shop</string>
+    <string name="pay">Pay</string>
 
     <!--Edittexts -->
     <string name="firstName">First Name</string>
@@ -18,8 +21,10 @@
 
 
     <!-- Textviews-->
-    <string name="welcome">Welcome!</string>
+    <string name="gender">Gender</string>
     <string name="notRegistered">Not a member yet?</string>
+    <string name="productName">Product Name</string>
+    <string name="productPrice">Product Price</string>
 
 
 </resources>
