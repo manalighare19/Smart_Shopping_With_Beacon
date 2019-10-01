@@ -4,6 +4,18 @@ public class Product {
     String discount;
     String name;
     String photo;
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "discount='" + discount + '\'' +
+                ", name='" + name + '\'' +
+                ", photo='" + photo + '\'' +
+                ", price='" + price + '\'' +
+                ", region='" + region + '\'' +
+                '}';
+    }
+
     String price;
     String region;
 

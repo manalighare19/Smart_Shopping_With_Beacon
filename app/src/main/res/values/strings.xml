@@ -10,6 +10,8 @@
     <string name="logout">Logout</string>
     <string name="shop">Shop</string>
     <string name="pay">Pay</string>
+    <string name="addToCart">Add to Cart</string>
+    <string name="goToCart">Go to Cart</string>
 
     <!--Edittexts -->
     <string name="firstName">First Name</string>

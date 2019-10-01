@@ -1,9 +1,12 @@
 package com.example.inclass03_amad;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,11 +24,13 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
     static ArrayList<Product> ShoppingItemArrayList;
     static Product product;
     Context mContext;
+    AddToCartInterface addToCartInterface;
 
-    public ShoppingItemAdapter(Context context,ArrayList<Product> ShoppingItemArraylist1)
+    public ShoppingItemAdapter(Context context,ArrayList<Product> ShoppingItemArraylist1,AddToCartInterface addToCartInterface1)
     {
         this.ShoppingItemArrayList=ShoppingItemArraylist1;
         this.mContext = context;
+        this.addToCartInterface = addToCartInterface1;
 
     }
 
@@ -38,14 +43,17 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         product= ShoppingItemArrayList.get(position);
         if (product!=null){
+            holder.addToCartInterface = addToCartInterface;
             holder.productName.setText(product.getName());
             holder.productPrice.setText("$"+product.getPrice());
-            File f = new File("drawable://" + product.getPhoto());
-            System.out.println("file path : "+f.getPath());
-            Picasso.get().load(f).into(holder.productImage);
+
+            Picasso.get().load("drawable://" + product.getPhoto())
+                    .config(Bitmap.Config.RGB_565)
+                    .fit().centerCrop()
+                    .into(holder.productImage);
 
 
         }
@@ -62,11 +70,25 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
         TextView productPrice;
         TextView productName;
         ImageView productImage;
-        public ViewHolder(@NonNull View itemView) {
+        Button addToCartBtn;
+        AddToCartInterface addToCartInterface;
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             productName = itemView.findViewById(R.id.itemNameTextView);
             productPrice = itemView.findViewById(R.id.itemPriceTextView);
             productImage = itemView.findViewById(R.id.itemImageView);
+            addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
+
+
+            addToCartBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO: call Add to Cart API from here
+                    Log.d("Button Clicked", "onClick: "+ShoppingItemArrayList.get(getAdapterPosition()).getName());
+                    addToCartInterface.addToCart(ShoppingItemArrayList.get(getAdapterPosition()));
+                }
+            });
+
         }
     }
 }

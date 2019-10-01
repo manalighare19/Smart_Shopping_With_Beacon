@@ -34,17 +34,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class ShoppingActivity extends AppCompatActivity {
+public class ShoppingActivity extends AppCompatActivity implements AddToCartInterface{
 
-    private Button payButton;
+    private Button payButton, goToCartButton;
     private OkHttpClient client, client1;
     private String clientToken;
     private RecyclerView shoppingItemsRecyclerView;
-    private RecyclerView.Adapter shoppingItemAdapter;
     private RecyclerView.LayoutManager layoutManager;
     Gson gson = new Gson();
 
     private ArrayList<Product> ShoppingItemArrayList;
+    private ArrayList<Product> SelectedItemsArrayList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,10 +52,13 @@ public class ShoppingActivity extends AppCompatActivity {
         setTitle("Shop");
 
         ShoppingItemArrayList = new ArrayList<>();
+        SelectedItemsArrayList = new ArrayList<>();
 
         client = new OkHttpClient();
         client1 = new OkHttpClient();
+
         payButton = findViewById(R.id.payBtn);
+        goToCartButton = findViewById(R.id.goToCartBtn);
 
         shoppingItemsRecyclerView = findViewById(R.id.shoppingItemsRV);
         shoppingItemsRecyclerView.setHasFixedSize(true);
@@ -88,14 +91,26 @@ public class ShoppingActivity extends AppCompatActivity {
             }
         });
 
-
-
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DropInRequest dropInRequest = new DropInRequest()
                         .clientToken(clientToken);
                 startActivityForResult(dropInRequest.getIntent(ShoppingActivity.this), 1);
+            }
+        });
+
+        goToCartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Gson gson = new Gson();
+
+                String SelectedItems = gson.toJson(SelectedItemsArrayList);
+                Intent goToCartIntent = new Intent(ShoppingActivity.this, AddToCartActivity.class);
+                Log.d("Selected Items", "onClick: "+SelectedItems);
+                goToCartIntent.putExtra("list_as_string", SelectedItems);
+                startActivity(goToCartIntent);
+
             }
         });
     }
@@ -119,19 +134,12 @@ public class ShoppingActivity extends AppCompatActivity {
                     ShoppingItemArrayList.add(product);
                 }
 
-                System.out.println("Arraylist count is  :"+ShoppingItemArrayList.size());
-                shoppingItemsRecyclerView.setAdapter(new ShoppingItemAdapter(this,ShoppingItemArrayList));
+                shoppingItemsRecyclerView.setAdapter(new ShoppingItemAdapter(this,ShoppingItemArrayList,this));
 
             }
             catch (Exception e){
                 System.out.println("Exception occured : "+e.toString());
             }
-            Log.d("items are:", "getShoppingItems: ");
-
-
-            Product product = gson.fromJson(json, Product.class);
-           // Log.d("Product is:", "getShoppingItems: "+product.getName());
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -165,7 +173,6 @@ public class ShoppingActivity extends AppCompatActivity {
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
-                            Log.d("Responce is:", "onResponse: "+response);
                         }
                     });
 
@@ -183,5 +190,11 @@ public class ShoppingActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void addToCart(Product product) {
 
+        SelectedItemsArrayList.add(product);
+        Log.d("product is", "addToCart: "+SelectedItemsArrayList.size());
+
+    }
 }
