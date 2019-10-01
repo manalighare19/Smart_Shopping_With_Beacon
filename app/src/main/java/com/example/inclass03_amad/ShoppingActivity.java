@@ -41,10 +41,11 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
     private String clientToken;
     private RecyclerView shoppingItemsRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    Gson gson = new Gson();
-
     private ArrayList<Product> ShoppingItemArrayList;
     private ArrayList<Product> SelectedItemsArrayList;
+
+    Gson gson = new Gson();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

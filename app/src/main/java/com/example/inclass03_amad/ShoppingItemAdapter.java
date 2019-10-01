@@ -85,6 +85,7 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
                 public void onClick(View view) {
                     //TODO: call Add to Cart API from here
                     Log.d("Button Clicked", "onClick: "+ShoppingItemArrayList.get(getAdapterPosition()).getName());
+                    addToCartBtn.setBackground();
                     addToCartInterface.addToCart(ShoppingItemArrayList.get(getAdapterPosition()));
                 }
             });
