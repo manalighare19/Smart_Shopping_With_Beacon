@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -26,12 +28,14 @@ public class AddItemToCartAdapter extends RecyclerView.Adapter<AddItemToCartAdap
     static Product product;
     Context mContext;
 
-    String[] quantityItems = new String[]{"qty","1","2","3","4","5","6","7","8","9","10"};
+    String[] quantityItems = new String[]{"1","2","3","4","5","6","7","8","9","10"};
+    CartQuantityInterface cartQuantityInterface;
 
-    public AddItemToCartAdapter(Context context,ArrayList<Product> SelectedItemsArrayList1)
+    public AddItemToCartAdapter(Context context,ArrayList<Product> SelectedItemsArrayList1, CartQuantityInterface cartQuantityInterface1)
     {
         this.SelectedItemsArrayList=SelectedItemsArrayList1;
         this.mContext = context;
+        this.cartQuantityInterface = cartQuantityInterface1;
     }
 
     @NonNull
@@ -47,8 +51,16 @@ public class AddItemToCartAdapter extends RecyclerView.Adapter<AddItemToCartAdap
         product= SelectedItemsArrayList.get(position);
         if (product!=null){
 
+            holder.cartQuantityInterface = cartQuantityInterface;
             holder.productName.setText(product.getName());
-            holder.productPrice.setText("$"+product.getPrice());
+            double discount=Double.parseDouble(product.getDiscount());
+            double price=Double.parseDouble(product.getPrice());
+            DecimalFormat df = new DecimalFormat("####0.00");
+            if(discount>0)
+            {
+                double discounted_price=((100.00-discount)*price)/100;
+                holder.productPrice.setText("$"+String.valueOf(df.format(discounted_price)));
+            }
 
             if (product.getPhoto() != null) {
                 String uri = "@drawable/"+product.getPhoto().substring(0,product.getPhoto().indexOf('.'));
@@ -65,6 +77,7 @@ public class AddItemToCartAdapter extends RecyclerView.Adapter<AddItemToCartAdap
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item, quantityItems);
             holder.quantitySpinner.setAdapter(adapter);
+            holder.quantitySpinner.setSelection(0);
         }
 
     }
@@ -80,6 +93,7 @@ public class AddItemToCartAdapter extends RecyclerView.Adapter<AddItemToCartAdap
         TextView productName;
         ImageView productImage;
         Spinner quantitySpinner;
+        CartQuantityInterface cartQuantityInterface;
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -87,6 +101,21 @@ public class AddItemToCartAdapter extends RecyclerView.Adapter<AddItemToCartAdap
             productPrice = itemView.findViewById(R.id.itemPriceTextView);
             productImage = itemView.findViewById(R.id.itemImageView);
             quantitySpinner = itemView.findViewById(R.id.quantitySpinner);
+
+            quantitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    quantitySpinner.setSelection(i);
+                    Log.d("quantity is:", "onItemSelected: "+(i+1));
+                    SelectedItemsArrayList.get(getAdapterPosition()).setQuantity(i+1);
+                    cartQuantityInterface.getTotal(SelectedItemsArrayList.get(getAdapterPosition()),getAdapterPosition());
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
 
         }
     }

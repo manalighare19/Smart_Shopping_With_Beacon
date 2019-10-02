@@ -43,6 +43,8 @@
         android:paddingLeft="2dp"
         android:paddingTop="2dp"
         android:text="@string/productPrice"
+        android:textSize="15dp"
+        android:textColor="@color/grey"
         android:foreground="@drawable/strikethrough_foreground"
         app:layout_constraintStart_toEndOf="@+id/itemImageView"
         app:layout_constraintTop_toBottomOf="@+id/itemNameTextView" />
@@ -51,11 +53,12 @@
         android:id="@+id/discountPriceTextView"
         android:layout_width="0dp"
         android:layout_height="30dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="10dp"
         android:text="@string/discountPrice"
+        android:textColor="@color/black_color"
+        android:textSize="18dp"
         app:layout_constraintStart_toEndOf="@+id/itemPriceTextView"
-        app:layout_constraintTop_toBottomOf="@+id/itemNameTextView" />
+        app:layout_constraintTop_toTopOf="@+id/itemPriceTextView" />
 
     <TextView
         android:id="@+id/itemNameTextView"
@@ -66,6 +69,7 @@
         android:paddingLeft="2dp"
         android:paddingTop="2dp"
         android:text="@string/productName"
+        android:textColor="@color/black_color"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

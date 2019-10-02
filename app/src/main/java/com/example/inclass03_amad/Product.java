@@ -6,6 +6,7 @@ public class Product {
     String photo;
     String price;
     String region;
+    int quantity = 0;
     Boolean isAdded = false;
 
     @Override
@@ -15,8 +16,8 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", photo='" + photo + '\'' +
                 ", price='" + price + '\'' +
-                ", region=" + region +
-                ", isAdded='" + isAdded + '\'' +
+                ", region='" + region + '\'' +
+                ", isAdded=" + isAdded +
                 '}';
     }
 
@@ -59,6 +60,12 @@ public class Product {
     public void setRegion(String region) {
         this.region = region;
     }
+    public int getQuantity() {
+        return quantity;
+    }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
 }

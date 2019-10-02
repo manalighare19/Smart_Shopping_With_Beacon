@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.net.URI;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -72,6 +73,15 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
                 holder.addToCartBtn.setBackground(ContextCompat.getDrawable(mContext, R.drawable.custom_button));
                 holder.addToCartBtn.setText("Add to Cart");
             }
+
+            double discount=Double.parseDouble(product.getDiscount());
+            double price=Double.parseDouble(product.getPrice());
+            DecimalFormat df = new DecimalFormat("####0.00");
+            if(discount>0)
+            {
+                double discounted_price=((100.00-discount)*price)/100;
+                holder.discountPrice.setText("$"+String.valueOf(df.format(discounted_price)));
+            }
         }
     }
 
@@ -104,11 +114,15 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
                         ShoppingItemArrayList.get(getAdapterPosition()).isAdded = true;
                         addToCartBtn.setBackground(ContextCompat.getDrawable(mContext, R.drawable.custom_button_black));
                         addToCartBtn.setText("Added");
+                        product.setQuantity(1);
+                        Log.d("quantity is", "onClick: "+product.getQuantity());
                         addToCartInterface.addToCart(ShoppingItemArrayList.get(getAdapterPosition()));
                     }else {
                         ShoppingItemArrayList.get(getAdapterPosition()).isAdded = false;
                         addToCartBtn.setBackground(ContextCompat.getDrawable(mContext, R.drawable.custom_button));
                         addToCartBtn.setText("Add to Cart");
+                        product.setQuantity(0);
+                        Log.d("quantity is", "onClick: "+product.getQuantity());
                         addToCartInterface.removeFromCart(ShoppingItemArrayList.get(getAdapterPosition()));
                     }
 

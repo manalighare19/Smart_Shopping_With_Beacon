@@ -28,4 +28,6 @@
     <string name="productName">Product Name</string>
     <string name="productPrice">Product Price</string>
     <string name="discountPrice">Discount Price</string>
+    <string name="total">Amount:</string>
+    <string name="amountValue">$0.00</string>
 </resources>

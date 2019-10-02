@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
@@ -29,10 +30,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class AddToCartActivity extends AppCompatActivity {
+public class AddToCartActivity extends AppCompatActivity implements CartQuantityInterface{
     private Button payButton;
+    private TextView totalAmountValue;
     private OkHttpClient client, client1;
     private String clientToken;
     private RecyclerView addToCartRecyclerView;
@@ -51,6 +54,7 @@ public class AddToCartActivity extends AppCompatActivity {
         client1 = new OkHttpClient();
 
         payButton = findViewById(R.id.payBtn);
+        totalAmountValue =findViewById(R.id.totalAmountValue);
         addToCartRecyclerView = findViewById(R.id.cartItemsRecyclerView);
 
         addToCartRecyclerView.setHasFixedSize(true);
@@ -64,7 +68,7 @@ public class AddToCartActivity extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<Product>>(){}.getType();
         SelectedItemList = gson.fromJson(SelectedItemsString, type);
 
-        addToCartRecyclerView.setAdapter(new AddItemToCartAdapter(this,SelectedItemList));
+        addToCartRecyclerView.setAdapter(new AddItemToCartAdapter(this,SelectedItemList,this));
         String url = "http://ec2-3-17-204-58.us-east-2.compute.amazonaws.com:4000/brain/token";
         final Request request = new Request.Builder()
                 .url(url)
@@ -143,5 +147,24 @@ public class AddToCartActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    @Override
+    public void getTotal(Product product, int position) {
+        SelectedItemList.get(position).setQuantity(product.quantity);
+        calculateTotal();
+    }
+
+    private void calculateTotal() {
+        Double totalAmt=0.0;
+        DecimalFormat df = new DecimalFormat("####0.00");
+
+        for(Product product:SelectedItemList)
+        {    Double price=Double.parseDouble(product.getPrice());
+            Double discount=Double.parseDouble(product.getDiscount());
+            Double discountedPrice=((100-discount)*price)/100;
+            totalAmt+=discountedPrice*product.getQuantity();
+        }
+        totalAmountValue.setText("$ "+(df.format(totalAmt)));
     }
 }
