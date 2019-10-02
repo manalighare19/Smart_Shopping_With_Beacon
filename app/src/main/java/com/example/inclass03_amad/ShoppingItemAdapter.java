@@ -1,7 +1,9 @@
 package com.example.inclass03_amad;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapter.ViewHolder> {
@@ -50,14 +53,26 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
             holder.productName.setText(product.getName());
             holder.productPrice.setText("$"+product.getPrice());
 
-            Picasso.get().load("drawable://" + product.getPhoto())
-                    .config(Bitmap.Config.RGB_565)
-                    .fit().centerCrop()
-                    .into(holder.productImage);
+            if (product.getPhoto() != null) {
+                String uri = "@drawable/"+product.getPhoto().substring(0,product.getPhoto().indexOf('.'));
+                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                Drawable res = mContext.getResources().getDrawable(imageResource);
+                holder.productImage.setImageDrawable(res);
+            }else {
+                String uri = "@drawable/" + "no_image_found";
+                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                Drawable res = mContext.getResources().getDrawable(imageResource);
+                holder.productImage.setImageDrawable(res);
+            }
 
-
+            if (product.isAdded == true){
+                holder.addToCartBtn.setBackground(ContextCompat.getDrawable(mContext, R.drawable.custom_button_black));
+                holder.addToCartBtn.setText("Added");
+            }else if(product.isAdded == false){
+                holder.addToCartBtn.setBackground(ContextCompat.getDrawable(mContext, R.drawable.custom_button));
+                holder.addToCartBtn.setText("Add to Cart");
+            }
         }
-
     }
 
     @Override
@@ -67,26 +82,37 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView productPrice;
+        TextView productPrice, discountPrice;
         TextView productName;
         ImageView productImage;
         Button addToCartBtn;
         AddToCartInterface addToCartInterface;
+
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             productName = itemView.findViewById(R.id.itemNameTextView);
             productPrice = itemView.findViewById(R.id.itemPriceTextView);
             productImage = itemView.findViewById(R.id.itemImageView);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
-
+            discountPrice = itemView.findViewById(R.id.discountPriceTextView);
 
             addToCartBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //TODO: call Add to Cart API from here
-                    Log.d("Button Clicked", "onClick: "+ShoppingItemArrayList.get(getAdapterPosition()).getName());
-                    addToCartBtn.setBackground();
-                    addToCartInterface.addToCart(ShoppingItemArrayList.get(getAdapterPosition()));
+                    if (ShoppingItemArrayList.get(getAdapterPosition()).isAdded == false){
+                        ShoppingItemArrayList.get(getAdapterPosition()).isAdded = true;
+                        addToCartBtn.setBackground(ContextCompat.getDrawable(mContext, R.drawable.custom_button_black));
+                        addToCartBtn.setText("Added");
+                        addToCartInterface.addToCart(ShoppingItemArrayList.get(getAdapterPosition()));
+                    }else {
+                        ShoppingItemArrayList.get(getAdapterPosition()).isAdded = false;
+                        addToCartBtn.setBackground(ContextCompat.getDrawable(mContext, R.drawable.custom_button));
+                        addToCartBtn.setText("Add to Cart");
+                        addToCartInterface.removeFromCart(ShoppingItemArrayList.get(getAdapterPosition()));
+                    }
+
+
                 }
             });
 

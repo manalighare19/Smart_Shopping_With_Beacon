@@ -41,6 +41,7 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
     private String clientToken;
     private RecyclerView shoppingItemsRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
+
     private ArrayList<Product> ShoppingItemArrayList;
     private ArrayList<Product> SelectedItemsArrayList;
 
@@ -58,7 +59,7 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
         client = new OkHttpClient();
         client1 = new OkHttpClient();
 
-        payButton = findViewById(R.id.payBtn);
+        //payButton = findViewById(R.id.payBtn);
         goToCartButton = findViewById(R.id.goToCartBtn);
 
         shoppingItemsRecyclerView = findViewById(R.id.shoppingItemsRV);
@@ -67,48 +68,46 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
         shoppingItemsRecyclerView.setLayoutManager(layoutManager);
         getShoppingItems();
 
-        String url = "http://ec2-3-17-204-58.us-east-2.compute.amazonaws.com:4000/brain/token";
-        final Request request = new Request.Builder()
-                .url(url)
-                .get()
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String json = response.body().string();
-                JSONObject root = null;
-                try {
-                    root = new JSONObject(json);
-                    clientToken= root.getString("clientToken");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-        payButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DropInRequest dropInRequest = new DropInRequest()
-                        .clientToken(clientToken);
-                startActivityForResult(dropInRequest.getIntent(ShoppingActivity.this), 1);
-            }
-        });
+//        String url = "http://ec2-3-17-204-58.us-east-2.compute.amazonaws.com:4000/brain/token";
+//        final Request request = new Request.Builder()
+//                .url(url)
+//                .get()
+//                .build();
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                String json = response.body().string();
+//                JSONObject root = null;
+//                try {
+//                    root = new JSONObject(json);
+//                    clientToken= root.getString("clientToken");
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        });
+//
+//        payButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                DropInRequest dropInRequest = new DropInRequest()
+//                        .clientToken(clientToken);
+//                startActivityForResult(dropInRequest.getIntent(ShoppingActivity.this), 1);
+//            }
+//        });
 
         goToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Gson gson = new Gson();
-
                 String SelectedItems = gson.toJson(SelectedItemsArrayList);
                 Intent goToCartIntent = new Intent(ShoppingActivity.this, AddToCartActivity.class);
-                Log.d("Selected Items", "onClick: "+SelectedItems);
                 goToCartIntent.putExtra("list_as_string", SelectedItems);
                 startActivity(goToCartIntent);
 
@@ -147,55 +146,58 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
         return;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
-                // use the result to update your UI and send the payment method nonce to your server
-                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("paymentMethodNonce",result.getPaymentMethodNonce().getNonce());
-                    String jsonString=jsonObject.toString();
-                    RequestBody requestBody = RequestBody.create(JSON, jsonString);
-                    String url = "http://ec2-3-17-204-58.us-east-2.compute.amazonaws.com:4000/brain/sandbox";
-                    final Request request = new Request.Builder()
-                            .url(url)
-                            .post(requestBody)
-                            .build();
-                    client1.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                        }
-                    });
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            } else if (resultCode == RESULT_CANCELED) {
-                // the user canceled
-            } else {
-                // handle errors here, an exception may be available in
-                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
-            }
-        }
-
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == 1) {
+//            if (resultCode == RESULT_OK) {
+//                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+//                // use the result to update your UI and send the payment method nonce to your server
+//                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+//                JSONObject jsonObject = new JSONObject();
+//                try {
+//                    jsonObject.put("paymentMethodNonce",result.getPaymentMethodNonce().getNonce());
+//                    String jsonString=jsonObject.toString();
+//                    RequestBody requestBody = RequestBody.create(JSON, jsonString);
+//                    String url = "http://ec2-3-17-204-58.us-east-2.compute.amazonaws.com:4000/brain/sandbox";
+//                    final Request request = new Request.Builder()
+//                            .url(url)
+//                            .post(requestBody)
+//                            .build();
+//                    client1.newCall(request).enqueue(new Callback() {
+//                        @Override
+//                        public void onFailure(Call call, IOException e) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onResponse(Call call, Response response) throws IOException {
+//                        }
+//                    });
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            } else if (resultCode == RESULT_CANCELED) {
+//                // the user canceled
+//            } else {
+//                // handle errors here, an exception may be available in
+//                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+//            }
+//        }
+//
+//    }
 
     @Override
     public void addToCart(Product product) {
-
         SelectedItemsArrayList.add(product);
         Log.d("product is", "addToCart: "+SelectedItemsArrayList.size());
+    }
 
+    @Override
+    public void removeFromCart(Product product) {
+        SelectedItemsArrayList.remove(product);
     }
 }

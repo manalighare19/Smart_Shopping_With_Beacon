@@ -4,6 +4,9 @@ public class Product {
     String discount;
     String name;
     String photo;
+    String price;
+    String region;
+    Boolean isAdded = false;
 
     @Override
     public String toString() {
@@ -12,19 +15,9 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", photo='" + photo + '\'' +
                 ", price='" + price + '\'' +
-                ", region='" + region + '\'' +
+                ", region=" + region +
+                ", isAdded='" + isAdded + '\'' +
                 '}';
-    }
-
-    String price;
-    String region;
-
-    public Product(String discount, String name, String photo, String price, String region) {
-        this.discount = discount;
-        this.name = name;
-        this.photo = photo;
-        this.price = price;
-        this.region = region;
     }
 
     public String getDiscount() {

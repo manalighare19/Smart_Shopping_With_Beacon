@@ -2,6 +2,7 @@ package com.example.inclass03_amad;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,7 @@ public class AddItemToCartAdapter extends RecyclerView.Adapter<AddItemToCartAdap
     static Product product;
     Context mContext;
 
-    Integer[] quantityItems = new Integer[]{1,2,3,4,5,6,7,8,9,10};
+    String[] quantityItems = new String[]{"qty","1","2","3","4","5","6","7","8","9","10"};
 
     public AddItemToCartAdapter(Context context,ArrayList<Product> SelectedItemsArrayList1)
     {
@@ -49,15 +50,21 @@ public class AddItemToCartAdapter extends RecyclerView.Adapter<AddItemToCartAdap
             holder.productName.setText(product.getName());
             holder.productPrice.setText("$"+product.getPrice());
 
-            ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(mContext,android.R.layout.simple_spinner_item, quantityItems);
+            if (product.getPhoto() != null) {
+                String uri = "@drawable/"+product.getPhoto().substring(0,product.getPhoto().indexOf('.'));
+                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                Drawable res = mContext.getResources().getDrawable(imageResource);
+                holder.productImage.setImageDrawable(res);
+
+            }else{
+                String uri = "@drawable/"+"no_image_found";
+                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+                Drawable res = mContext.getResources().getDrawable(imageResource);
+                holder.productImage.setImageDrawable(res);
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item, quantityItems);
             holder.quantitySpinner.setAdapter(adapter);
-
-            Picasso.get().load("drawable://" + product.getPhoto())
-                    .config(Bitmap.Config.RGB_565)
-                    .fit().centerCrop()
-                    .into(holder.productImage);
-
-
         }
 
     }

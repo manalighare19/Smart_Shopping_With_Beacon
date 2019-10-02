@@ -6,20 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ShoppingActivity">
 
-    <Button
-        android:id="@+id/payBtn"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/custom_button"
-        android:text="@string/pay"
-        android:textColor="@color/cardview_light_background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/shoppingItemsRV"
         android:layout_width="0dp"
@@ -36,12 +22,12 @@
         android:layout_height="40dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="8dp"
-        android:textAllCaps="false"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/custom_button_black"
         android:text="@string/goToCart"
+        android:textAllCaps="false"
         android:textColor="@color/cardview_light_background"
-        app:layout_constraintBottom_toTopOf="@+id/payBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
