@@ -49,7 +49,9 @@ public class UserProfile extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         String token = sharedPreferences.getString("Token",null);
+        String customerID = sharedPreferences.getString("CustomerID",null);
         final String userID = sharedPreferences.getString("UserID",null);
+
 
         String url = "http://ec2-3-17-204-58.us-east-2.compute.amazonaws.com:4000/users/current";
         final Request request = new Request.Builder()
@@ -139,6 +141,7 @@ public class UserProfile extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("Token", null);
                 editor.putString("UserID",null);
+                editor.putString("CustomerID",null);
                 editor.apply();
 
                 finish();

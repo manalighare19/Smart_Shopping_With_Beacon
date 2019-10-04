@@ -120,6 +120,8 @@ public class Login extends AppCompatActivity {
 
                         editor.putString("Token", TOKEN);
                         editor.putString("UserID",root.getString("_id"));
+                        editor.putString("CustomerID",root.getString("customerID"));
+                        Log.d("demoooo", root.getString("customerID"));
                         editor.apply();
 
                         Intent intent = new Intent(Login.this, UserProfile.class);

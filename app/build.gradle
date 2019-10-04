@@ -19,6 +19,7 @@ android {
     }
 
     repositories {
+        maven{  url "https://jitpack.io" }
         maven {
             url "https://cardinalcommerce.bintray.com/android"
             credentials {
@@ -41,4 +42,8 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    implementation 'com.github.TutorialsAndroid:KAlertDialog:v7.0.19'
+
+
 }

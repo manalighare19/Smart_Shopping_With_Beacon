@@ -13,15 +13,19 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
+import com.developer.kalert.KAlertDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -40,6 +44,7 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
     private String clientToken;
     private RecyclerView addToCartRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    private  String sendAmount="";
 
 
     ArrayList<Product> SelectedItemList;
@@ -53,6 +58,15 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
         client = new OkHttpClient();
         client1 = new OkHttpClient();
 
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        String token = sharedPreferences.getString("Token",null);
+        String customerID = sharedPreferences.getString("CustomerID",null);
+        final String userID = sharedPreferences.getString("UserID",null);
+
+
+        Log.d("demooo1",customerID);
+
+
         payButton = findViewById(R.id.payBtn);
         totalAmountValue =findViewById(R.id.totalAmountValue);
         addToCartRecyclerView = findViewById(R.id.cartItemsRecyclerView);
@@ -62,7 +76,7 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
         addToCartRecyclerView.setLayoutManager(layoutManager);
 
         SelectedItemList = new ArrayList<>();
-        String SelectedItemsString = getIntent().getStringExtra("list_as_string");
+        final String SelectedItemsString = getIntent().getStringExtra("list_as_string");
 
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Product>>(){}.getType();
@@ -70,9 +84,22 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
 
         addToCartRecyclerView.setAdapter(new AddItemToCartAdapter(this,SelectedItemList,this));
         String url = "http://ec2-3-17-204-58.us-east-2.compute.amazonaws.com:4000/brain/token";
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("customerID",customerID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String jsonString=jsonObject.toString();
+        RequestBody requestBody = RequestBody.create(JSON, jsonString);
+
+
         final Request request = new Request.Builder()
                 .url(url)
-                .get()
+                .post(requestBody)
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -82,6 +109,7 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                Log.d("demooo respo", response.toString());
                 String json = response.body().string();
                 JSONObject root = null;
                 try {
@@ -99,6 +127,8 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
             public void onClick(View view) {
                 DropInRequest dropInRequest = new DropInRequest()
                         .clientToken(clientToken);
+
+
                 startActivityForResult(dropInRequest.getIntent(AddToCartActivity.this), 1);
             }
         });
@@ -117,6 +147,7 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("paymentMethodNonce",result.getPaymentMethodNonce().getNonce());
+                    jsonObject.put("amount",sendAmount);
                     String jsonString=jsonObject.toString();
                     RequestBody requestBody = RequestBody.create(JSON, jsonString);
                     String url = "http://ec2-3-17-204-58.us-east-2.compute.amazonaws.com:4000/brain/sandbox";
@@ -132,6 +163,56 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
+                            String json = response.body().string();
+                            JSONObject root = null;
+                            try {
+                                root = new JSONObject(json);
+                                Log.d("amount", root.toString());
+                                SelectedItemList.clear();
+//                                runOnUiThread(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+////                                        addToCartRecyclerView.setAdapter(new AddItemToCartAdapter(AddToCartActivity.this,SelectedItemList,AddToCartActivity.this));
+//                                        finish();
+//
+//
+//                                    }
+//                                });
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new KAlertDialog(AddToCartActivity.this, KAlertDialog.WARNING_TYPE)
+                                                .setTitleText("Payment was successfull")
+                                                .setContentText("Thank you for shopping with us")
+                                                .setCustomImage(R.drawable.custom_img)
+                                                .setConfirmText("Okay")
+                                                .setConfirmClickListener(new KAlertDialog.KAlertClickListener() {
+                                                    @Override
+                                                    public void onClick(final KAlertDialog sDialog) {
+                                                        Handler handler = new Handler();
+                                                        handler.postDelayed(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                sDialog.dismissWithAnimation();
+
+                                                            }
+                                                        }, 3000);
+
+                                                        finish();
+                                                    }
+
+
+                                                })
+                                                .show();
+                                    }
+                                });
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     });
 
@@ -156,15 +237,16 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
     }
 
     private void calculateTotal() {
-        Double totalAmt=0.0;
+        double totalAmt=0.0;
         DecimalFormat df = new DecimalFormat("####0.00");
 
         for(Product product:SelectedItemList)
-        {    Double price=Double.parseDouble(product.getPrice());
-            Double discount=Double.parseDouble(product.getDiscount());
-            Double discountedPrice=((100-discount)*price)/100;
+        {    double price=Double.parseDouble(product.getPrice());
+            double discount=Double.parseDouble(product.getDiscount());
+            double discountedPrice=((100-discount)*price)/100;
             totalAmt+=discountedPrice*product.getQuantity();
         }
         totalAmountValue.setText("$ "+(df.format(totalAmt)));
+        sendAmount=df.format(totalAmt);
     }
 }

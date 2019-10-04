@@ -46,6 +46,16 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
     Gson gson = new Gson();
 
     @Override
+    protected void onPostResume() {
+
+        SelectedItemsArrayList=new ArrayList<>();
+        for(int i=0;i<ShoppingItemArrayList.size();i++)
+            ShoppingItemArrayList.get(i).isAdded=false;
+        shoppingItemsRecyclerView.setAdapter(new ShoppingItemAdapter(this,ShoppingItemArrayList,this));
+        super.onPostResume();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping);
