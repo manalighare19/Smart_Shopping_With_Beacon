@@ -31,7 +31,8 @@ import java.io.IOException;
 public class AddCardDetails extends AppCompatActivity{
     Simplify simplify;
     OkHttpClient client;
-    String amount;
+    private String amount;
+    private Button cancelButton,checkoutButton ;
 
 
     @Override
@@ -48,22 +49,20 @@ public class AddCardDetails extends AppCompatActivity{
         final String customerID = sharedPreferences.getString("CustomerID",null);
 
         // init card editor
-        final CardEditor cardEditor = (CardEditor) findViewById(R.id.card_editor);
-        final Button checkoutButton = (Button) findViewById(R.id.checkoutBtn);
+        final CardEditor cardEditor = findViewById(R.id.card_editor);
+        checkoutButton = findViewById(R.id.checkoutBtn);
+        cancelButton = findViewById(R.id.cancelbtn);
 
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
                 amount= null;
-                Log.d("hello", "onCreate: "+amount);
             } else {
                 amount= extras.getString("amount");
-                Log.d("heyy", "onCreate: "+amount);
             }
         } else {
             amount= (String) savedInstanceState.getSerializable("amount");
-            Log.d("you there", "onCreate: "+amount);
         }
         // add state change listener
         cardEditor.addOnStateChangedListener(new CardEditor.OnStateChangedListener() {
@@ -73,6 +72,16 @@ public class AddCardDetails extends AppCompatActivity{
                 checkoutButton.setEnabled(cardEditor.isValid());
             }
         });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Intent cancelIntent = new Intent(AddCardDetails.this,AddToCartActivity.class);
+//                startActivity(cancelIntent);
+                finish();
+            }
+        });
+
         // add checkout button click listener
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +97,6 @@ public class AddCardDetails extends AppCompatActivity{
                         try {
                             jsonObject.put("customerID",customerID);
                             jsonObject.put("amount",amount);
-                            Log.d("amount is", "onSuccess: "+amount);
 
                             JSONObject cardObject = new JSONObject();
                             cardObject.put("expMonth",cardEditor.getCard().getExpMonth());

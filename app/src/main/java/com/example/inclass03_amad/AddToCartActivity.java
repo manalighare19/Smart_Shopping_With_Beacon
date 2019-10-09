@@ -76,13 +76,32 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
         SelectedItemList = gson.fromJson(SelectedItemsString, type);
 
         addToCartRecyclerView.setAdapter(new AddItemToCartAdapter(this,SelectedItemList,this));
+
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent checkoutIntent = new Intent(AddToCartActivity.this,AddCardDetails.class);
-                checkoutIntent.putExtra("amount",String.valueOf(sendAmt));
-                startActivity(checkoutIntent);
 
+                if(sendAmt!=0.0) {
+                    Intent checkoutIntent = new Intent(AddToCartActivity.this, AddCardDetails.class);
+                    checkoutIntent.putExtra("amount", String.valueOf(sendAmt));
+                    startActivity(checkoutIntent);
+                }else{
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new KAlertDialog(AddToCartActivity.this)
+                                    .setTitleText("Sorry, cart is empty.")
+                                    .setConfirmClickListener(new KAlertDialog.KAlertClickListener() {
+                                        @Override
+                                        public void onClick(KAlertDialog kAlertDialog) {
+                                            finish();
+                                        }
+                                    })
+                                    .show();
+
+                        }
+                    });
+                }
                 Log.d("send amount is", "onClick: "+sendAmt);
             }
         });
