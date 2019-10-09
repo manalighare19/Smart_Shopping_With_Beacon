@@ -29,11 +29,6 @@ public class SignUp extends AppCompatActivity {
     private EditText firstName, lastName, email, password, confirmPassword, address;
     private Button registerBtn,cancelBtn;
     OkHttpClient client;
-    static String TOKEN=null;
-    static String LOGIN_KEY="login";
-    static String USER_KEY="userkey";
-
-    static String CHECK_KEY="checkLogin";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +84,6 @@ public class SignUp extends AppCompatActivity {
         jsonObject.put("address",address);
 
         String jsonString=jsonObject.toString();
-        Log.d("Json string", "register: "+jsonString);
         RequestBody rbody = RequestBody.create(JSON, jsonString);
 
 

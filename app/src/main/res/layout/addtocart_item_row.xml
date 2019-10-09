@@ -7,6 +7,8 @@
     android:orientation="vertical"
     android:padding="4dp">
 
+
+
     <ImageView
         android:id="@+id/itemImageView"
         android:layout_width="100dp"

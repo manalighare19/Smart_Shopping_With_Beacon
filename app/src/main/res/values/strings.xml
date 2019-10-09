@@ -12,6 +12,7 @@
     <string name="pay">Pay</string>
     <string name="addToCart">Add to Cart</string>
     <string name="goToCart">Go to Cart</string>
+    <string name="checkout">Checkout</string>
 
     <!--Edittexts -->
     <string name="firstName">First Name</string>

@@ -30,7 +30,6 @@ public class Login extends AppCompatActivity {
     private Button loginBtn, signUpBtn;
     OkHttpClient client;
     static String TOKEN=null;
-    User user=new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +110,6 @@ public class Login extends AppCompatActivity {
                     String json = response.body().string();
                     JSONObject root = new JSONObject(json);
 
-
                     String status= root.getString("email");
                     if(status.equals(email)) {
                         TOKEN = root.getString("token");
@@ -121,7 +119,6 @@ public class Login extends AppCompatActivity {
                         editor.putString("Token", TOKEN);
                         editor.putString("UserID",root.getString("_id"));
                         editor.putString("CustomerID",root.getString("customerID"));
-                        Log.d("demoooo", root.getString("customerID"));
                         editor.apply();
 
                         Intent intent = new Intent(Login.this, UserProfile.class);

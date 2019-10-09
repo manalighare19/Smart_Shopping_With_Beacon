@@ -19,7 +19,7 @@ android {
     }
 
     repositories {
-        maven{  url "https://jitpack.io" }
+        maven { url "https://jitpack.io" }
         maven {
             url "https://cardinalcommerce.bintray.com/android"
             credentials {
@@ -40,6 +40,9 @@ dependencies {
     implementation 'com.loopj.android:android-async-http:1.4.9'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.simplify:simplify-android:3.0.0'
+    implementation "androidx.cardview:cardview:1.0.0"
+
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 

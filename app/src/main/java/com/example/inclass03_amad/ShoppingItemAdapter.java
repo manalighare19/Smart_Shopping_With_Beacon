@@ -115,14 +115,12 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
                         addToCartBtn.setBackground(ContextCompat.getDrawable(mContext, R.drawable.custom_button_black));
                         addToCartBtn.setText("Added");
                         product.setQuantity(1);
-                        Log.d("quantity is", "onClick: "+product.getQuantity());
                         addToCartInterface.addToCart(ShoppingItemArrayList.get(getAdapterPosition()));
                     }else {
                         ShoppingItemArrayList.get(getAdapterPosition()).isAdded = false;
                         addToCartBtn.setBackground(ContextCompat.getDrawable(mContext, R.drawable.custom_button));
                         addToCartBtn.setText("Add to Cart");
                         product.setQuantity(0);
-                        Log.d("quantity is", "onClick: "+product.getQuantity());
                         addToCartInterface.removeFromCart(ShoppingItemArrayList.get(getAdapterPosition()));
                     }
 
