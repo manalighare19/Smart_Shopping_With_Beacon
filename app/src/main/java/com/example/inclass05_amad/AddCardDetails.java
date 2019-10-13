@@ -76,8 +76,6 @@ public class AddCardDetails extends AppCompatActivity{
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent cancelIntent = new Intent(AddCardDetails.this,AddToCartActivity.class);
-//                startActivity(cancelIntent);
                 finish();
             }
         });

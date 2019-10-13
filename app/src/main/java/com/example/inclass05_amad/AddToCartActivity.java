@@ -42,7 +42,6 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
     private TextView totalAmountValue;
     private RecyclerView addToCartRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    double totalAmt=0.0;
     double sendAmt=0.0;
     DecimalFormat df = new DecimalFormat("####0.00");
 
@@ -55,9 +54,9 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
         setTitle("Cart");
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-        String token = sharedPreferences.getString("Token",null);
-        String customerID = sharedPreferences.getString("CustomerID",null);
-        final String userID = sharedPreferences.getString("UserID",null);
+//        String token = sharedPreferences.getString("Token",null);
+//        String customerID = sharedPreferences.getString("CustomerID",null);
+//        final String userID = sharedPreferences.getString("UserID",null);
 
 
         payButton = findViewById(R.id.payBtn);
@@ -118,14 +117,14 @@ public class AddToCartActivity extends AppCompatActivity implements CartQuantity
 
     private void calculateTotal() {
 
-
+        double totalAmt=0.0;
         for(Product product:SelectedItemList)
         {   double price=Double.parseDouble(product.getPrice());
             double discount=Double.parseDouble(product.getDiscount());
             double discountedPrice=((100-discount)*price)/100;
             totalAmt+=discountedPrice*product.getQuantity();
-            sendAmt = totalAmt*100;
         }
         totalAmountValue.setText("$ "+(df.format(totalAmt)));
+        sendAmt = totalAmt*100;
     }
 }
