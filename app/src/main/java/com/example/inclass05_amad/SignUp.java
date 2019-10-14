@@ -1,4 +1,4 @@
-package com.example.inclass03_amad;
+package com.example.inclass05_amad;
 
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
@@ -12,7 +12,6 @@ import okhttp3.Response;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;

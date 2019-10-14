@@ -1,10 +1,10 @@
-package com.example.inclass03_amad;
+package com.example.inclass05_amad;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +12,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.net.URI;
+import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import okhttp3.Callback;
 
 public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapter.ViewHolder> {
     static ArrayList<Product> ShoppingItemArrayList;
@@ -30,7 +27,7 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
     Context mContext;
     AddToCartInterface addToCartInterface;
 
-    public ShoppingItemAdapter(Context context,ArrayList<Product> ShoppingItemArraylist1,AddToCartInterface addToCartInterface1)
+    public ShoppingItemAdapter( Context context, ArrayList<Product> ShoppingItemArraylist1,AddToCartInterface addToCartInterface1)
     {
         this.ShoppingItemArrayList=ShoppingItemArraylist1;
         this.mContext = context;
@@ -49,22 +46,25 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         product= ShoppingItemArrayList.get(position);
+        String image;
         if (product!=null){
             holder.addToCartInterface = addToCartInterface;
             holder.productName.setText(product.getName());
             holder.productPrice.setText("$"+product.getPrice());
 
-            if (product.getPhoto() != null) {
-                String uri = "@drawable/"+product.getPhoto().substring(0,product.getPhoto().indexOf('.'));
-                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
-                Drawable res = mContext.getResources().getDrawable(imageResource);
-                holder.productImage.setImageDrawable(res);
+            if (!product.getPhoto().equals("No Image")){
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte[] imageBytes = baos.toByteArray();
+                imageBytes = Base64.decode(product.photo, Base64.DEFAULT);
+                Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                holder.productImage.setImageBitmap(decodedImage);
             }else {
                 String uri = "@drawable/" + "no_image_found";
                 int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
                 Drawable res = mContext.getResources().getDrawable(imageResource);
                 holder.productImage.setImageDrawable(res);
             }
+
 
             if (product.isAdded == true){
                 holder.addToCartBtn.setBackground(ContextCompat.getDrawable(mContext, R.drawable.custom_button_black));

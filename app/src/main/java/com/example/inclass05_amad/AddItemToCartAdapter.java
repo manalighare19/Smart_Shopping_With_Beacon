@@ -1,21 +1,21 @@
-package com.example.inclass03_amad;
+package com.example.inclass05_amad;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
+import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -62,14 +62,14 @@ public class AddItemToCartAdapter extends RecyclerView.Adapter<AddItemToCartAdap
                 holder.productPrice.setText("$"+String.valueOf(df.format(discounted_price)));
             }
 
-            if (product.getPhoto() != null) {
-                String uri = "@drawable/"+product.getPhoto().substring(0,product.getPhoto().indexOf('.'));
-                int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
-                Drawable res = mContext.getResources().getDrawable(imageResource);
-                holder.productImage.setImageDrawable(res);
-
-            }else{
-                String uri = "@drawable/"+"no_image_found";
+            if (!product.getPhoto().equals("No Image")){
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte[] imageBytes = baos.toByteArray();
+                imageBytes = Base64.decode(product.photo, Base64.DEFAULT);
+                Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                holder.productImage.setImageBitmap(decodedImage);
+            }else {
+                String uri = "@drawable/" + "no_image_found";
                 int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
                 Drawable res = mContext.getResources().getDrawable(imageResource);
                 holder.productImage.setImageDrawable(res);

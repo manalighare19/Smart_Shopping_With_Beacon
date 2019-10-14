@@ -1,4 +1,4 @@
-package com.example.inclass03_amad;
+package com.example.inclass05_amad;
 
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.Call;
@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
