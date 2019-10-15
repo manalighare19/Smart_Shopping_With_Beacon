@@ -43,13 +43,11 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
     private RecyclerView.LayoutManager layoutManager;
     private BeaconManager beaconManager;
     private BeaconRegion region;
-    String liveRegion;
-
-    OkHttpClient client;
+    OkHttpClient client,client1;
 
     private ArrayList<Product> ShoppingItemArrayList;
     private ArrayList<Product> SelectedItemsArrayList;
-
+    ShoppingItemAdapter shoppingItemAdapter;
     Gson gson = new Gson();
 
     @Override
@@ -62,16 +60,6 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
         super.onPostResume();
     }
 
-    private static final Map<String, String> PLACES_BY_BEACONS;
-
-    // TODO: replace "<major>:<minor>" strings to match your own beacons.
-    static {
-        Map<String, String> placesByBeacons = new HashMap<>();
-        placesByBeacons.put("30476:29902", "grocery");
-        placesByBeacons.put("41072:44931","lifestyle");
-        placesByBeacons.put("648:12","produce");
-        PLACES_BY_BEACONS = Collections.unmodifiableMap(placesByBeacons);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +68,8 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
         setTitle("Shop");
 
         client = new OkHttpClient();
+        client1 = new OkHttpClient();
+
         ShoppingItemArrayList = new ArrayList<>();
         SelectedItemsArrayList = new ArrayList<>();
 
@@ -90,23 +80,41 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
         layoutManager=new LinearLayoutManager(ShoppingActivity.this);
         shoppingItemsRecyclerView.setLayoutManager(layoutManager);
 
+        ShoppingItemArrayList.clear();
+        shoppingItemAdapter = new ShoppingItemAdapter(this,ShoppingItemArrayList,ShoppingActivity.this);
+        shoppingItemsRecyclerView.setAdapter(shoppingItemAdapter);
+
+
         beaconManager = new BeaconManager(this);
         beaconManager.setRangingListener(new BeaconManager.BeaconRangingListener() {
             @Override
             public void onBeaconsDiscovered(BeaconRegion beaconRegion, List<Beacon> list) {
                 if (!list.isEmpty()) {
-                    System.out.println("List of beacons : "+list.get(0).getMajor()+ ' ' +list.get(0).getMinor());
+                    Log.d("List of beacons :", "onBeaconsDiscovered: "+list.get(0).getMajor()+ ' ' +list.get(0).getMinor());
                     Beacon nearestBeacon = list.get(0);
-                    liveRegion = placesNearBeacon(nearestBeacon);
-                    // TODO: update the UI here
+
+                    if (nearestBeacon.getMinor() == 44931  && nearestBeacon.getMajor() == 41072){
+                        ShoppingItemArrayList.clear();
+                        getShoppingListByRegion("grocery");
+                    }
+                    else if(nearestBeacon.getMinor() == 29902  && nearestBeacon.getMajor() == 30476){
+                        ShoppingItemArrayList.clear();
+                        getShoppingListByRegion("produce");
+                    }
+                    else {
+                        ShoppingItemArrayList.clear();
+                        getShoppingItems();
+                    }
+
+                }
+                else{
+                    ShoppingItemArrayList.clear();
+                    getShoppingItems();
                 }
             }
         });
         region = new BeaconRegion("ranged region",
                 UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
-
-        getShoppingItems();
-
 
         goToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,12 +128,61 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
         });
     }
 
-    private String placesNearBeacon(Beacon beacon) {
-        String beaconKey = String.format("%d:%d", beacon.getMajor(), beacon.getMinor());
-        if (PLACES_BY_BEACONS.containsKey(beaconKey)) {
-            return PLACES_BY_BEACONS.get(beaconKey);
+    private void getShoppingListByRegion(String region) {
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            Log.d("region is", "getShoppingListByRegion: "+region);
+            jsonObject.put("region",region);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return null;
+
+        String jsonString=jsonObject.toString();
+        RequestBody requestBody = RequestBody.create(JSON, jsonString);
+
+        Request request = new Request.Builder()
+                .url("http://ec2-3-17-204-58.us-east-2.compute.amazonaws.com:4000/support/getProductsByRegion")
+                .post(requestBody)
+                .build();
+
+        client1.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+
+                try {
+                    JSONArray jsonArray = new JSONArray(json);
+                    for (int i=0;i< jsonArray.length();i++) {
+                        Product product = gson.fromJson(jsonArray.getString(i), Product.class);
+                        ShoppingItemArrayList.add(product);
+                        Log.d("shopping list", "onResponse: "+ShoppingItemArrayList);
+                    }
+
+                    shoppingItemAdapter.notifyDataSetChanged();
+                    
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            shoppingItemsRecyclerView.setAdapter(new ShoppingItemAdapter(ShoppingActivity.this,
+//                                    ShoppingItemArrayList,ShoppingActivity.this));
+//                        }
+//                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        });
+
     }
 
     @Override
@@ -175,16 +232,17 @@ public class ShoppingActivity extends AppCompatActivity implements AddToCartInte
                         for (int i=0;i< jsonArray.length();i++) {
                         Product product = gson.fromJson(jsonArray.getString(i), Product.class);
                         ShoppingItemArrayList.add(product);
-                        Log.d("shopping arraylist", "onResponse: "+ShoppingItemArrayList);
                     }
+                    shoppingItemAdapter.notifyDataSetChanged();
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            shoppingItemsRecyclerView.setAdapter(new ShoppingItemAdapter(ShoppingActivity.this,
-                                    ShoppingItemArrayList,ShoppingActivity.this));
-                        }
-                    });
+
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            shoppingItemsRecyclerView.setAdapter(new ShoppingItemAdapter(ShoppingActivity.this,
+//                                    ShoppingItemArrayList,ShoppingActivity.this));
+//                        }
+//                    });
 
 
                 } catch (JSONException e) {
